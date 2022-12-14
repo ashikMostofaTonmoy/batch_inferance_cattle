@@ -44,16 +44,22 @@ def mergedCSV(imgDataPath=dataPath, mpCsvPath=mPowerCsvPath, vExlPath=valoSaniti
         pat='/', expand=True)[2]
 
     # merge valo and mpower dataframe
-    df_mv = pd.merge(dfm, dfv, how='right', left_on='id',
-                     right_on='ID Number (App)')
+    df_mv = pd.merge(dfm, dfv, how='right', left_on='animal_id', right_on='ID Number (App)')
 
-    # filter image path  from dataframe
-    dftf_side = dftf[dftf.NameOnly.isin(df_mv.sideImgNameOnly)]
 
-    # copy image file path to dataframe
-    df_mv['sideImgLoc'] = dftf_side.fileWithDirectory.values
-    dftf_rear = dftf[dftf.NameOnly.isin(df_mv.rearImgNameOnly)]
-    df_mv['rearImgLoc'] = dftf_rear.fileWithDirectory.values
+    df_mv = pd.merge(df_mv, dftf, how='left', left_on='sideImgNameOnly',
+                     right_on='NameOnly').rename({'fileWithDirectory': 'sideImgLoc'}, axis='columns')
+ 
+    df_mv = pd.merge(df_mv, dftf, how='left', left_on='rearImgNameOnly',
+                     right_on='NameOnly').rename({'fileWithDirectory': 'rearImgLoc'}, axis='columns')
+
+    # # filter image path  from dataframe
+    # dftf_side = dftf[dftf.NameOnly.isin(df_mv.sideImgNameOnly)]
+
+    # # copy image file path to dataframe
+    # df_mv['sideImgLoc'] = dftf_side.fileWithDirectory.values
+    # dftf_rear = dftf[dftf.NameOnly.isin(df_mv.rearImgNameOnly)]
+    # df_mv['rearImgLoc'] = dftf_rear.fileWithDirectory.values
 
     # export to CSV
     df_mv.to_csv(os.path.join(outPath, outFname))
