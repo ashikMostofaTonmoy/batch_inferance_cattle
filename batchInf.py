@@ -33,8 +33,10 @@ def mergedCSV(imgDataPath=dataPath, mpCsvPath=mPowerCsvPath, vExlPath=valoSaniti
                             file_types=('.jpg')).fileDirectory
 
     # read excel & csv files and convert all data to data frames
-    dfm = pd.read_csv(mpCsvPath, index_col=0)
-    dfv = pd.read_excel(vExlPath, index_col='ID Number (App)')
+    # dfm = pd.read_csv(mpCsvPath, index_col=0)
+    dfm = pd.read_csv(mpCsvPath)
+    # dfv = pd.read_excel(vExlPath, index_col='ID Number (App)')
+    dfv = pd.read_excel(vExlPath)
     dftf = pd.DataFrame(files, columns=['fileWithDirectory'])
 
     # extract names and expand dataframe
